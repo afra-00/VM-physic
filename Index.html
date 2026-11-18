@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>چگالی | Slytherin Density Lab</title>
+  <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&family=Cinzel:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --sly-green: #1a472a;
+      --sly-green-light: #2a623d;
+      --sly-green-bright: #3d8b5a;
+      --sly-silver: #c0c0c0;
+      --sly-silver-dark: #8a8a8a;
+      --sly-bg: #0d1a12;
+      --sly-card: #132619;
+      --sly-border: #2f5c40;
+      --water: #4ecdc4;
+      --water-dark: #1a7a72;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Vazirmatn', Tahoma, sans-serif;
+      background: var(--sly-bg);
+      color: var(--sly-silver);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(ellipse at 20% 50%, rgba(42, 98, 61, 0.25) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 20%, rgba(26, 71, 42, 0.3) 0%, transparent 40%);
+    }
+
+    header {
+      text-align: center;
+      padding: 28px 20px 10px;
+      border-bottom: 1px solid var(--sly-border);
+      background: linear-gradient(180deg, rgba(26,71,42,0.4), transparent);
+    }
+
+    header h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 1.9rem;
+      color: var(--sly-silver);
+      letter-spacing: 3px;
+      text-shadow: 0 0 20px rgba(61, 139, 90, 0.6);
+    }
+
+    header p {
+      margin-top: 6px;
+      font-size: 0.95rem;
+      color: var(--sly-green-bright);
+      opacity: 0.9;
+    }
+
+    .lab {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 30px 20px 100px;
+    }
+
+    .stage {
+      height: 340px;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+      margin-bottom: 30px;
+      position: relative;
+    }
+
+    .shape-container {
+      position: relative;
+      transition: all 0.5s ease;
+    }
+
+    /* Cylinder */
+    .cylinder {
+      width: 160px;
+      height: 240px;
+      background: linear-gradient(90deg, #1e3a2a, #2a4a35, #1e3a2a);
+      border: 3px solid var(--sly-silver-dark);
+      border-radius: 8px / 20px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset 0 0 30px rgba(0,0,0,0.5), 0 15px 35px rgba(0,0,0,0.5);
+    }
+
+    .cylinder::before {
+      content: '';
+      position: absolute;
+      top: -12px;
+      left: -3px;
+      right: -3px;
+      height: 24px;
+      background: linear-gradient(90deg, #2a4a35, #3d6b4a, #2a4a35);
+      border: 3px solid var(--sly-silver-dark);
+      border-radius: 50%;
+      z-index: 2;
+    }
+
+    /* Cube */
+    .cube {
+      width: 180px;
+      height: 180px;
+      background: linear-gradient(145deg, #1e3a2a, #2a4a35);
+      border: 3px solid var(--sly-silver-dark);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 8px 8px 0 #152a1c, 0 15px 35px rgba(0,0,0,0.5);
+      transform: rotateX(8deg) rotateY(-8deg);
+    }
+
+    /* Cuboid */
+    .cuboid {
+      width: 220px;
+      height: 150px;
+      background: linear-gradient(145deg, #1e3a2a, #2a4a35);
+      border: 3px solid var(--sly-silver-dark);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 10px 10px 0 #152a1c, 0 15px 35px rgba(0,0,0,0.5);
+    }
+
+    /* Pyramid */
+    .pyramid {
+      width: 0;
+      height: 0;
+      border-left: 110px solid transparent;
+      border-right: 110px solid transparent;
+      border-bottom: 200px solid #2a4a35;
+      position: relative;
+      filter: drop-shadow(0 12px 20px rgba(0,0,0,0.5));
+    }
+
+    .pyramid-inner {
+      position: absolute;
+      bottom: -200px;
+      left: -100px;
+      width: 0;
+      height: 0;
+      border-left: 100px solid transparent;
+      border-right: 100px solid transparent;
+      border-bottom: 185px solid #1e3a2a;
+      overflow: hidden;
+    }
+
+    /* Sphere */
+    .sphere {
+      width: 200px;
+      height: 200px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 30%, #3d6b4a, #1e3a2a 60%, #0f2015);
+      border: 3px solid var(--sly-silver-dark);
+      position: relative;
+      overflow: hidden;
+      box-shadow: inset -20px -20px 40px rgba(0,0,0,0.4), 0 15px 40px rgba(0,0,0,0.5);
+    }
+
+    /* Water */
+    .water {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, var(--water-dark), var(--water));
+      transition: height 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+      overflow: hidden;
+    }
+
+    .cylinder .water { border-radius: 0 0 5px 5px; }
+    .cube .water, .cuboid .water { border-radius: 0; }
+    .sphere .water { border-radius: 0 0 50% 50%; }
+
+    .water::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 14px;
+      background: linear-gradient(to bottom, rgba(255,255,255,0.35), transparent);
+      border-radius: 50% 50% 0 0;
+    }
+
+    /* Particles */
+    .particle {
+      position: absolute;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.55);
+      border-radius: 50%;
+      animation: float 3.5s infinite ease-in-out;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); opacity: 0.5; }
+      50% { transform: translateY(-40px) scale(1.3); opacity: 0.9; }
+    }
+
+    /* Formula */
+    .formula-box {
+      background: var(--sly-card);
+      border: 1px solid var(--sly-border);
+      border-radius: 16px;
+      padding: 22px 24px;
+      margin-bottom: 24px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    }
+
+    .formula-title {
+      font-size: 0.85rem;
+      color: var(--sly-green-bright);
+      margin-bottom: 10px;
+      letter-spacing: 1px;
+    }
+
+    .formula {
+      font-size: 1.7rem;
+      font-weight: 700;
+      color: var(--sly-silver);
+      direction: ltr;
+      font-family: 'Cinzel', serif;
+      letter-spacing: 2px;
+    }
+
+    .formula span {
+      color: #7dcea0;
+      transition: color 0.3s;
+    }
+
+    .density-result {
+      margin-top: 14px;
+      font-size: 1.15rem;
+      color: var(--sly-silver);
+    }
+
+    .density-result strong {
+      color: #7dcea0;
+      font-size: 1.4rem;
+    }
+
+    /* Sliders */
+    .sliders {
+      display: grid;
+      gap: 18px;
+    }
+
+    .slider-group {
+      background: var(--sly-card);
+      border: 1px solid var(--sly-border);
+      border-radius: 14px;
+      padding: 16px 18px;
+    }
+
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .slider-label {
+      font-weight: 600;
+      font-size: 1rem;
+      color: var(--sly-silver);
+    }
+
+    .slider-value {
+      font-weight: 700;
+      color: #7dcea0;
+      font-size: 1.05rem;
+      min-width: 100px;
+      text-align: left;
+      direction: ltr;
+    }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 8px;
+      border-radius: 4px;
+      background: #1a2f22;
+      outline: none;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: linear-gradient(145deg, #3d8b5a, #1a472a);
+      cursor: pointer;
+      border: 2px solid var(--sly-silver);
+      box-shadow: 0 0 12px rgba(61, 139, 90, 0.5);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: #2a623d;
+      cursor: pointer;
+      border: 2px solid var(--sly-silver);
+    }
+
+    /* Switcher */
+    .switcher {
+      position: fixed;
+      bottom: 28px;
+      left: 28px;
+      z-index: 100;
+    }
+
+    .switch-btn {
+      background: linear-gradient(145deg, var(--sly-green-light), var(--sly-green));
+      color: var(--sly-silver);
+      border: 2px solid var(--sly-silver-dark);
+      padding: 14px 22px;
+      border-radius: 50px;
+      font-family: 'Vazirmatn', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+      transition: all 0.25s ease;
+    }
+
+    .switch-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 28px rgba(42, 98, 61, 0.5);
+      background: linear-gradient(145deg, #3d8b5a, var(--sly-green-light));
+    }
+
+    .shape-name {
+      position: absolute;
+      top: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(13, 26, 18, 0.85);
+      padding: 6px 16px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      color: #7dcea0;
+      border: 1px solid var(--sly-border);
+      letter-spacing: 1px;
+    }
+
+    .note {
+      text-align: center;
+      margin-top: 28px;
+      font-size: 0.8rem;
+      color: var(--sly-silver-dark);
+      opacity: 0.8;
+    }
+
+    @media (max-width: 500px) {
+      header h1 { font-size: 1.5rem; }
+      .stage { height: 280px; }
+      .formula { font-size: 1.35rem; }
+      .switcher { bottom: 18px; left: 18px; }
+      .switch-btn { padding: 12px 16px; font-size: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SLYTHERIN DENSITY LAB</h1>
+    <p>آزمایشگاه چگالی • تغییر جرم و حجم</p>
+  </header>
+
+  <div class="lab">
+    <div class="stage">
+      <div class="shape-name" id="shapeName">استوانه</div>
+      <div class="shape-container" id="shapeContainer"></div>
+    </div>
+
+    <div class="formula-box">
+      <div class="formula-title">فرمول چگالی</div>
+      <div class="formula">
+        ρ = <span id="mDisplay">1000</span> / <span id="vDisplay">1000</span>
+      </div>
+      <div class="density-result">
+        چگالی = <strong id="densityValue">1.00</strong> g/cm³
+      </div>
+    </div>
+
+    <div class="sliders">
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">جرم (m)</span>
+          <span class="slider-value" id="massLabel">1000 g</span>
+        </div>
+        <input type="range" id="massSlider" min="100" max="5000" value="1000" step="10">
+      </div>
+
+      <div class="slider-group">
+        <div class="slider-header">
+          <span class="slider-label">حجم (V)</span>
+          <span class="slider-value" id="volumeLabel">1000 cm³</span>
+        </div>
+        <input type="range" id="volumeSlider" min="200" max="4000" value="1000" step="10">
+      </div>
+    </div>
+
+    <p class="note">
+      چگالی آب خالص ≈ ۱ g/cm³ &nbsp;|&nbsp; ρ = m ÷ V
+    </p>
+  </div>
+
+  <div class="switcher">
+    <button class="switch-btn" id="switchBtn">
+      <span>⟳</span>
+      <span id="nextShapeText">بعدی: هرم</span>
+    </button>
+  </div>
+
+  <script>
+    const shapes = [
+      { id: 'cylinder', name: 'استوانه', next: 'هرم' },
+      { id: 'pyramid',  name: 'هرم',     next: 'مکعب' },
+      { id: 'cube',     name: 'مکعب',    next: 'کره' },
+      { id: 'sphere',   name: 'کره',     next: 'مکعب مستطیل' },
+      { id: 'cuboid',   name: 'مکعب مستطیل', next: 'استوانه' }
+    ];
+
+    let currentIndex = 0;
+
+    const shapeContainer = document.getElementById('shapeContainer');
+    const shapeNameEl = document.getElementById('shapeName');
+    const nextShapeText = document.getElementById('nextShapeText');
+    const massSlider = document.getElementById('massSlider');
+    const volumeSlider = document.getElementById('volumeSlider');
+    const massLabel = document.getElementById('massLabel');
+    const volumeLabel = document.getElementById('volumeLabel');
+    const mDisplay = document.getElementById('mDisplay');
+    const vDisplay = document.getElementById('vDisplay');
+    const densityValue = document.getElementById('densityValue');
+    const switchBtn = document.getElementById('switchBtn');
+
+    function createShape(type) {
+      shapeContainer.innerHTML = '';
+      let el;
+
+      if (type === 'cylinder') {
+        el = document.createElement('div');
+        el.className = 'cylinder';
+        el.innerHTML = `<div class="water" id="water"></div>`;
+      }
+      else if (type === 'cube') {
+        el = document.createElement('div');
+        el.className = 'cube';
+        el.innerHTML = `<div class="water" id="water"></div>`;
+      }
+      else if (type === 'cuboid') {
+        el = document.createElement('div');
+        el.className = 'cuboid';
+        el.innerHTML = `<div class="water" id="water"></div>`;
+      }
+      else if (type === 'sphere') {
+        el = document.createElement('div');
+        el.className = 'sphere';
+        el.innerHTML = `<div class="water" id="water"></div>`;
+      }
+      else if (type === 'pyramid') {
+        el = document.createElement('div');
+        el.className = 'pyramid';
+        el.innerHTML = `
+          <div class="pyramid-inner">
+            <div class="water" id="water" style="position:absolute;bottom:0;left:0;right:0;height:40%;background:linear-gradient(to top,#1a7a72,#4ecdc4);"></div>
+          </div>
+        `;
+      }
+
+      shapeContainer.appendChild(el);
+      addParticles();
+      updateWaterHeight();
+    }
+
+    function addParticles() {
+      const water = document.getElementById('water');
+      if (!water) return;
+      water.querySelectorAll('.particle').forEach(p => p.remove());
+
+      for (let i = 0; i < 12; i++) {
+        const p = document.createElement('div');
+        p.className = 'particle';
+        p.style.left = Math.random() * 90 + 5 + '%';
+        p.style.bottom = Math.random() * 70 + 10 + '%';
+        p.style.animationDelay = (Math.random() * 3) + 's';
+        p.style.animationDuration = (2.5 + Math.random() * 2) + 's';
+        p.style.width = (3 + Math.random() * 4) + 'px';
+        p.style.height = p.style.width;
+        water.appendChild(p);
+      }
+    }
+
+    function update() {
+      const mass = parseFloat(massSlider.value);
+      const volume = parseFloat(volumeSlider.value);
+
+      massLabel.textContent = mass + ' g';
+      volumeLabel.textContent = volume + ' cm³';
+      mDisplay.textContent = mass;
+      vDisplay.textContent = volume;
+
+      const density = mass / volume;
+      densityValue.textContent = density.toFixed(2);
+
+      if (Math.abs(density - 1) < 0.08) {
+        densityValue.style.color = '#7dcea0';
+      } else if (density > 1) {
+        densityValue.style.color = '#f0c14b';
+      } else {
+        densityValue.style.color = '#5dade2';
+      }
+
+      updateWaterHeight();
+    }
+
+    function updateWaterHeight() {
+      const water = document.getElementById('water');
+      if (!water) return;
+      const volume = parseFloat(volumeSlider.value);
+      const percent = 18 + ((volume - 200) / 3800) * 74;
+      water.style.height = percent + '%';
+    }
+
+    function switchShape() {
+      currentIndex = (currentIndex + 1) % shapes.length;
+      const shape = shapes[currentIndex];
+      shapeNameEl.textContent = shape.name;
+      nextShapeText.textContent = 'بعدی: ' + shape.next;
+      createShape(shape.id);
+      update();
+    }
+
+    massSlider.addEventListener('input', update);
+    volumeSlider.addEventListener('input', update);
+    switchBtn.addEventListener('click', switchShape);
+
+    createShape('cylinder');
+    update();
+  </script>
+</body>
+</html>
